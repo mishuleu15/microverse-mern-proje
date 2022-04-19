@@ -14,7 +14,7 @@ const PORT = 5000;
 mongoose.connect(process.env.CONNECTION_URL);
 mongoose.connection.once('open', () => {
   console.log(
-    'Connection to database has been established successfully'.yellow
+    'Connection to database has been established successfully'.bgGrey
   );
 });
 

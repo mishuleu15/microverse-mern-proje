@@ -2,24 +2,41 @@ import React, { useState, useEffect } from 'react';
 import usestyles from './styles';
 import { TextField, Button, Typography, Paper } from '@material-ui/core';
 import FileBase from 'react-file-base64';
-import { useDispatch } from 'react-redux';
-import { createPost } from '../../actions/posts';
+import { useDispatch, useSelector } from 'react-redux';
+import { createPost, updatePost } from '../../actions/posts';
 
-const Form = () => {
+const Form = ({ currentId, setCurrentId }) => {
   const [postData, setPostData] = useState({
     title: '',
     message: '',
     tags: '',
     selectedFile: '',
   });
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((p) => p._id === currentId) : null
+  );
+
+  useEffect(() => {
+    if (post) setPostData(post);
+  }, [post]);
 
   const classes = usestyles();
-  const dispatch = useDispatch(postData);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(createPost(postData));
+    if (currentId) {
+      dispatch(updatePost(currentId, { ...postData }));
+    } else {
+      dispatch(createPost({ ...postData }));
+    }
+    clear();
+  };
+
+  const clear = () => {
+    setCurrentId(null);
+    setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
 
   return (
@@ -40,7 +57,12 @@ const Form = () => {
           label='Title'
           fullWidth
           value={postData.title}
-          onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          onChange={(e) =>
+            setPostData({
+              ...postData,
+              title: e.target.value,
+            })
+          }
         />
         <TextField
           name='message'
@@ -85,7 +107,7 @@ const Form = () => {
           variant='contained'
           color='secondary'
           size='small'
-          // onClick={clear}
+          onClick={clear}
           fullWidth
         >
           Clear

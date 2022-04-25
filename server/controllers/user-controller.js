@@ -26,7 +26,7 @@ export const signin = async (req, res) => {
       { expiresIn: '1h' }
     );
 
-    res.status(200).json({ result: existingUser, token });
+    res.status(200).json({ userLoggedIn: existingUser, token });
   } catch (error) {
     res.status(500).json({ message: 'Something went wrong' });
   }
@@ -52,6 +52,8 @@ export const signup = async (req, res) => {
       name: `${firstName} ${lastName}`,
     });
 
+    const userLoggedIn = await User.findById(result._id).select('-password');
+
     const token = jwt.sign(
       { email: result.email, id: result._id },
       process.env.JWT,
@@ -60,8 +62,9 @@ export const signup = async (req, res) => {
       }
     );
 
-    res.status(200).json({ result, token });
+    res.status(200).json({ userLoggedIn, token });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Something went wrong' });
   }
 };

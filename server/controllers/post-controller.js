@@ -11,9 +11,14 @@ export const getPosts = async (req, res) => {
 };
 
 export const createPost = async (req, res) => {
-  const body = req.body;
+  const post = req.body;
 
-  const newPost = new PostMessage(body);
+  const newPost = new PostMessage({
+    ...post,
+    creator: req.userId,
+    createdAt: new Date().toISOString(),
+  });
+
   try {
     await newPost.save();
     res.status(200).json(newPost);
@@ -50,6 +55,7 @@ export const deletePost = async (req, res) => {
     const postMessages = await PostMessage.find();
     res.status(200).json(postMessages);
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ message: error.message });
   }
 };
@@ -78,6 +84,7 @@ export const likePost = async (req, res) => {
     });
     res.status(200).json(updatedPost);
   } catch (error) {
+    console.log(error.message);
     res.status(400).json({ message: error.message });
   }
 };

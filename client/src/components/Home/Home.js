@@ -15,7 +15,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(getPosts());
-  }, []);
+  }, [dispatch]);
 
   const [currentId, setCurrentId] = useState(null);
 

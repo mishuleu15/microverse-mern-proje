@@ -26,10 +26,6 @@ app.use(cors());
 app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/user', userRouter);
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello from Server');
-});
-
 app.listen(PORT, () => {
   console.log(`Server listening at ${PORT}... `.cyan);
 });

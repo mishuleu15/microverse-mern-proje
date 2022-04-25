@@ -22,14 +22,17 @@ const Form = ({ currentId, setCurrentId }) => {
 
   const classes = usestyles();
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem('profile'));
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (currentId) {
-      dispatch(updatePost(currentId, { ...postData }));
+      dispatch(
+        updatePost(currentId, { ...postData, name: user?.userLoggedIn?.name })
+      );
     } else {
-      dispatch(createPost({ ...postData }));
+      dispatch(createPost({ ...postData, name: user?.userLoggedIn?.name }));
     }
     clear();
   };
@@ -38,6 +41,16 @@ const Form = ({ currentId, setCurrentId }) => {
     setCurrentId(null);
     setPostData({ title: '', message: '', tags: '', selectedFile: '' });
   };
+
+  if (!user?.userLoggedIn?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant='h6' align='center'>
+          Please Sign In to create your own posts and like other's posts.
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper className={classes.paper}>

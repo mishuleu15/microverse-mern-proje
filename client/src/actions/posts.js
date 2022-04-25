@@ -47,6 +47,6 @@ export const likePost = (id) => async (dispatch) => {
 
     dispatch({ type: UPDATE, payload: data });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 };
